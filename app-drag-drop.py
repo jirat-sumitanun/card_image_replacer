@@ -34,10 +34,10 @@ class MyApp(QtWidgets.QMainWindow):
                 filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
                 self.ui.filename.setText('new_{}'.format(filename))
                 self.ui.card.set_image(self.ui.card.path)
-            else:
-                self.ui.filename.setText("")
-                self.ui.saveLabel.setText("")
-                self.ui.card.path = ""
+        else:
+            self.ui.filename.setText("")
+            self.ui.saveLabel.setText("")
+            self.ui.card.path = ""
 
     def select_replace_image_event(self):
         self.ui.replaceImage.path,filters =  QtWidgets.QFileDialog.getOpenFileName(None, 'Select replace image', filter="Images (*png *jpg *jpeg *jiff)")
@@ -56,6 +56,8 @@ class MyApp(QtWidgets.QMainWindow):
 
     def save_file_as(self):
         if self.errorHandler():
+            filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
+            self.ui.filename.setText('new_{}'.format(filename))
             self.saveFilename = self.ui.filename.text() + '.png'
             dirs,filters = QtWidgets.QFileDialog.getSaveFileName(None, 'Save new card',osPath.join(osPath.dirname(self.ui.card.path), self.saveFilename), filter="*png")
             if dirs != "":
@@ -103,7 +105,8 @@ class MyApp(QtWidgets.QMainWindow):
             self.mode_selected = 'clothes'
 
     def check_card_type(self,selected_card):
-        print(self.mode_selected)
+        if selected_card == '':
+            return False
         if self.mode_selected == 'chara':
             if not checkIsCharacterCard(selected_card):
                 QtWidgets.QMessageBox.warning(self, "Error", "This is not Character Card")
