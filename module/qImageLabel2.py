@@ -37,13 +37,13 @@ class ImageLabel(QtWidgets.QLabel):
 
     def dropEvent(self, event):
         if event.mimeData().hasImage:
-            if not event.mimeData().urls()[0].toLocalFile().endswith('.png'):
-                QtWidgets.QMessageBox.warning(self, "Error", "only png")
-            elif event.mimeData().urls()[0].toLocalFile().endswith('.png'):
-                event.setDropAction(QtCore.Qt.CopyAction)
-                self.path = event.mimeData().urls()[0].toLocalFile()
-                self.set_image(self.path)
-                event.accept()
+            # if not event.mimeData().urls()[0].toLocalFile().endswith('.png'):
+            #     QtWidgets.QMessageBox.warning(self, "Error", "only png")
+            # elif event.mimeData().urls()[0].toLocalFile().endswith('.png'):
+            event.setDropAction(QtCore.Qt.CopyAction)
+            self.path = event.mimeData().urls()[0].toLocalFile()
+            self.set_image(self.path)
+            event.accept()
         else:
             event.ignore()
 
