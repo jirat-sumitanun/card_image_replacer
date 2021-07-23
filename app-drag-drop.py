@@ -6,12 +6,14 @@ from PyQt5.QtCore import pyqtSignal,pyqtSlot
 from module.utils import create_new_card,checkIsCharacterCard,checkIsCoordinateCard
 from module.appUi import Ui_Form
 
+
 class MyApp(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         # init main window
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.ui.add_custom_label(self)
         # init default data
         self.saveFilename = ''
         self.savePath = ''
@@ -22,7 +24,6 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.saveBtn.clicked.connect(self.save_file)
         self.ui.saveAsBtn.clicked.connect(self.save_file_as)
         self.ui.clearBtn.clicked.connect(self.clear_button_event)
-        self.ui.refreshFilenameBtn.clicked.connect(self.refreshFilename)
         self.ui.radioBtn_chara.clicked.connect(self.mode_change)
         self.ui.radioBtn_clothes.clicked.connect(self.mode_change)
         self.ui.card.dropped.connect(self.dropEventHandle)
@@ -86,10 +87,6 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.filename.setText("")
         self.ui.card.reset_data()
         self.ui.replaceImage.reset_data()
-
-    def refreshFilename(self):
-        filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
-        self.ui.filename.setText('new_{}'.format(filename))
 
     def errorHandler(self):
         if self.ui.card.path == "":
