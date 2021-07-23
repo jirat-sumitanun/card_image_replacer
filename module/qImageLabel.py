@@ -1,7 +1,9 @@
 import sys, os
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import pyqtSignal
 
 class ImageLabel(QtWidgets.QLabel):
+    dropped = pyqtSignal()
     def __init__(self,parent):
         super().__init__(parent)
         font = QtGui.QFont()
@@ -21,6 +23,8 @@ class ImageLabel(QtWidgets.QLabel):
                 border: 4px dashed #aaa;
             }
         ''')
+
+
 
 
     def dragEnterEvent(self, event):
@@ -43,6 +47,7 @@ class ImageLabel(QtWidgets.QLabel):
                 event.setDropAction(QtCore.Qt.CopyAction)
                 self.path = event.mimeData().urls()[0].toLocalFile()
                 self.set_image(self.path)
+                self.dropped.emit()
                 event.accept()
         else:
             event.ignore()

@@ -81,14 +81,15 @@ class Ui_Form(object):
         self.creditLabel = QtWidgets.QLabel(Form)
         self.creditLabel.setGeometry(QtCore.QRect(830, 500, 91, 16))
         self.creditLabel.setObjectName("creditLabel")
-        self.card = ImageLabel(Form)
-        self.replaceImage = ImageLabel2(Form)
+
         self.gridLayoutWidget = QtWidgets.QWidget(Form)
         self.gridLayoutWidget.setGeometry(QtCore.QRect(50, 30, 831, 361))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
+        self.card = ImageLabel(Form)
+        self.replaceImage = ImageLabel2(Form)
         self.gridLayout.addWidget(self.card,0,0)
         self.gridLayout.addWidget(self.replaceImage,0,1)
         self.refreshFilenameBtn = QtWidgets.QPushButton(Form)
@@ -129,11 +130,11 @@ class Ui_Form(object):
         self.radioBtn_clothes.setText(_translate("Form", "Clothes Card"))
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
-    sys.exit(app.exec_())
+# if __name__ == "__main__":
+#     import sys
+#     app = QtWidgets.QApplication(sys.argv)
+#     Form = QtWidgets.QWidget()
+#     ui = Ui_Form()
+#     ui.setupUi(Form)
+#     Form.show()
+#     sys.exit(app.exec_())

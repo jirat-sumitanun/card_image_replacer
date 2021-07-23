@@ -2,6 +2,7 @@
 import sys
 from os import path as osPath ,getcwd as osGetcwd
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import pyqtSignal,pyqtSlot
 from module.utils import create_new_card,checkIsCharacterCard,checkIsCoordinateCard
 from module.appUi import Ui_Form
 
@@ -24,6 +25,12 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.refreshFilenameBtn.clicked.connect(self.refreshFilename)
         self.ui.radioBtn_chara.clicked.connect(self.mode_change)
         self.ui.radioBtn_clothes.clicked.connect(self.mode_change)
+        self.ui.card.dropped.connect(self.dropEventHandle)
+
+    @pyqtSlot()
+    def dropEventHandle(self):
+        filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
+        self.ui.filename.setText('new_{}'.format(filename))
 
     def select_card_event(self):
         selected_card,filters = QtWidgets.QFileDialog.getOpenFileName(None, 'Select card', filter="*png")
