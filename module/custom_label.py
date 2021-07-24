@@ -1,6 +1,7 @@
 import sys, os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal
+from module.illusion_filter_module import card_filter
 
 class custom_Image_Label2(QtWidgets.QLabel):
     def __init__(self,parent):
@@ -17,8 +18,8 @@ class custom_Image_Label2(QtWidgets.QLabel):
         self.setObjectName("replaceImage")
         self.path = ''
         self.setStyleSheet('''
-            QLabel{
-                background-color: #d9ffff;
+            QLabel#replaceImage{
+                background-color: #ffe0d9;
                 border: 4px dashed #aaa;
             }
         ''')
@@ -71,22 +72,26 @@ class custom_Image_Label(custom_Image_Label2):
         self.setObjectName("card")
         self.path = ''
         self.setStyleSheet('''
-            QLabel{
+            QLabel#card{
                 background-color: #d9ffff;
                 border: 4px dashed #aaa;
             }
         ''')
 
     def dropEvent(self, event):
-        if event.mimeData().hasImage:
-            if not event.mimeData().urls()[0].toLocalFile().endswith('.png'):
-                QtWidgets.QMessageBox.warning(self, "Error", "only png")
-            elif event.mimeData().urls()[0].toLocalFile().endswith('.png'):
+        # if event.mimeData().hasImage:
+        if not event.mimeData().urls()[0].toLocalFile().endswith('.png'):
+            QtWidgets.QMessageBox.warning(self, "Error", "only png")
+        elif event.mimeData().urls()[0].toLocalFile().endswith('.png'):
+            if card_filter(event.mimeData().urls()[0].toLocalFile()):
                 event.setDropAction(QtCore.Qt.CopyAction)
                 self.path = event.mimeData().urls()[0].toLocalFile()
                 self.set_image(self.path)
                 self.dropped.emit()
                 event.accept()
+            else:
+                QtWidgets.QMessageBox.warning(self, "Error", "This file is not relate to Koikatsu")
+                event.ignore()
         else:
             event.ignore()
 

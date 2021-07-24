@@ -2,9 +2,11 @@
 import sys
 from os import path as osPath ,getcwd as osGetcwd
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSignal,pyqtSlot
-from module.utils import create_new_card,checkIsCharacterCard,checkIsCoordinateCard
+from PyQt5.QtCore import pyqtSignal, pyqtSlot
+from module.utils import create_new_card, extract_only_image
 from module.appUi import Ui_Form
+#from module.main import Ui_Form
+from module.custom_label import custom_Image_Label, custom_Image_Label2
 
 
 class MyApp(QtWidgets.QMainWindow):
@@ -13,39 +15,53 @@ class MyApp(QtWidgets.QMainWindow):
         # init main window
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        self.ui.add_custom_label(self)
+        self.ui.card = custom_Image_Label(self)
+        self.ui.replaceImage = custom_Image_Label2(self)
+        self.ui.gridLayout.addWidget(self.ui.card,0,0)
+        self.ui.gridLayout.addWidget(self.ui.replaceImage,0,1)
         # init default data
         self.saveFilename = ''
         self.savePath = ''
-        self.mode_selected = 'chara'
         # init button event
         self.ui.selectCard.clicked.connect(self.select_card_event)
         self.ui.selectReplaceImage.clicked.connect(self.select_replace_image_event)
         self.ui.saveBtn.clicked.connect(self.save_file)
         self.ui.saveAsBtn.clicked.connect(self.save_file_as)
         self.ui.clearBtn.clicked.connect(self.clear_button_event)
-        self.ui.radioBtn_chara.clicked.connect(self.mode_change)
-        self.ui.radioBtn_clothes.clicked.connect(self.mode_change)
+        self.ui.exportBtn.clicked.connect(self.extract_image_event)
         self.ui.card.dropped.connect(self.dropEventHandle)
+        self.ui.filename.textEdited.connect(self.changeFilenameHandle)
+
 
     @pyqtSlot()
     def dropEventHandle(self):
         filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
         self.ui.filename.setText('new_{}'.format(filename))
+        self.saveFilename = 'new_{}'.format(filename)
+
+    @pyqtSlot()
+    def changeFilenameHandle(self):
+        self.saveFilename = self.ui.filename.text()
 
     def select_card_event(self):
         selected_card,filters = QtWidgets.QFileDialog.getOpenFileName(None, 'Select card', filter="*png")
-        if self.check_card_type(selected_card):
+        if selected_card != "":
             self.ui.card.path = selected_card
-            if self.ui.card.path != "":
-                self.ui.saveLabel.setText("")
-                filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
-                self.ui.filename.setText('new_{}'.format(filename))
-                self.ui.card.set_image(self.ui.card.path)
-        else:
-            self.ui.filename.setText("")
             self.ui.saveLabel.setText("")
-            self.ui.card.path = ""
+            filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
+            self.ui.filename.setText('new_{}'.format(filename))
+            self.saveFilename = 'new_{}'.format(filename)
+            self.ui.card.set_image(self.ui.card.path)
+        # self.ui.card.path = selected_card
+        # if self.ui.card.path != "":
+        #     self.ui.saveLabel.setText("")
+        #     filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
+        #     self.ui.filename.setText('new_{}'.format(filename))
+        #     self.ui.card.set_image(self.ui.card.path)
+        # else:
+        #     self.ui.filename.setText("")
+        #     self.ui.saveLabel.setText("")
+        #     self.ui.card.path = ""
 
     def select_replace_image_event(self):
         self.ui.replaceImage.path,filters =  QtWidgets.QFileDialog.getOpenFileName(None, 'Select replace image', filter="Images (*png *jpg *jpeg *jiff)")
@@ -67,9 +83,9 @@ class MyApp(QtWidgets.QMainWindow):
             filename, ext = osPath.splitext(self.ui.card.path.split('/')[-1])
             self.ui.filename.setText('new_{}'.format(filename))
             self.saveFilename = self.ui.filename.text() + '.png'
-            dirs,filters = QtWidgets.QFileDialog.getSaveFileName(None, 'Save new card',osPath.join(osPath.dirname(self.ui.card.path), self.saveFilename), filter="*png")
-            if dirs != "":
-                self.savePath = dirs
+            save_file_path,filters = QtWidgets.QFileDialog.getSaveFileName(None, 'Save new card',osPath.join(osPath.dirname(self.ui.card.path), self.saveFilename), filter="*png")
+            if save_file_path != "":
+                self.savePath = save_file_path
                 self.saveNewCard()
                 self.save_success_message()
 
@@ -96,31 +112,28 @@ class MyApp(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.warning(self, "Error", "import replace image")
             return False
         if self.ui.filename.text() == "":
-            self.refreshFilename()
             if self.ui.card.path == "":
                 QtWidgets.QMessageBox.warning(self, "Error", "fill filename")
                 return False
         return True
 
-    def mode_change(self):
-        if self.ui.radioBtn_chara.isChecked():
-            self.mode_selected = 'chara'
-        elif self.ui.radioBtn_clothes.isChecked():
-            self.mode_selected = 'clothes'
 
-    def check_card_type(self,selected_card):
-        if selected_card == '':
-            return False
-        if self.mode_selected == 'chara':
-            if not checkIsCharacterCard(selected_card):
-                QtWidgets.QMessageBox.warning(self, "Error", "This is not Character Card")
-            else:
-                return True
-        elif self.mode_selected == 'clothes':
-            if not checkIsCoordinateCard(selected_card):
-                QtWidgets.QMessageBox.warning(self, "Error", "This is not Coordinate Card")
-            else:
-                return True
+    def extract_image_event(self):
+        extract_only_image(self.ui.card.path,None)
+
+    # def check_card_type(self,selected_card):
+    #     if selected_card == '':
+    #         return False
+    #     if self.mode_selected == 'chara':
+    #         if not checkIsCharacterCard(selected_card):
+    #             QtWidgets.QMessageBox.warning(self, "Error", "This is not Character Card")
+    #         else:
+    #             return True
+    #     elif self.mode_selected == 'clothes':
+    #         if not checkIsCoordinateCard(selected_card):
+    #             QtWidgets.QMessageBox.warning(self, "Error", "This is not Coordinate Card")
+    #         else:
+    #             return True
 
 def main():
     try:

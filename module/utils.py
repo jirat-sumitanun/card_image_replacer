@@ -21,7 +21,8 @@ def convertJPGtoPNG(replaced_image_path, saved_new_card_path):
 
 
 def create_copied_card(replaced_image_path, saved_new_card_path):
-    shutilCopy(replaced_image_path, saved_new_card_path)
+    #shutilCopy(replaced_image_path, saved_new_card_path)
+    extract_only_image(replaced_image_path,saved_new_card_path)
 
 
 def writeCharacterData(original_card_path, saved_new_card_path):
@@ -35,29 +36,22 @@ def writeCharacterData(original_card_path, saved_new_card_path):
                 newCard.write(text)
 
 
-def checkIsCharacterCard(characterCard_path):
-    with open(characterCard_path, 'rb') as readImage:
-        s = readImage.read()
-        v1 = s.find(b"KoiKatuChara")
-        v2 = s.find(b"AIS_Chara")
-        if v1 == -1:
-            if v2 == -1:
-                return False
-            else:
-                return True
+def extract_only_image(src,dest):
+    path, ext = os.path.splitext(src)
+    filename = path.replace('\\','/').split('/').pop()
+    with open (src, 'rb') as f:
+        s = f.read()
+        text = b"IEND\xaeB`\x82"
+        card_data = s.split(text)
+        if dest == None:
+            if not os.path.isdir(os.path.join(os.getcwd(),"extract_png")):
+                os.mkdir(os.path.join(os.getcwd(),"extract_png"))
+            with open ("extract_png/extract_%s%s"%(filename,ext), 'ab') as extractPng:
+                for i in range(0,2):
+                    extractPng.write(card_data[i])
+                    extractPng.write(text)
         else:
-            return True
-
-
-def checkIsCoordinateCard(coordinateCard_path):
-    with open(coordinateCard_path, 'rb') as readImage:
-        s = readImage.read()
-        v1 = s.find(b'KoiKatuClothes')
-        v2 = s.find(b'AIS_Clothes')
-        if v1 == -1:
-            if v2 == -1:
-                return False
-            else:
-                return True
-        else:
-            return True
+            with open (dest, 'ab') as extractPng:
+                for i in range(0,2):
+                    extractPng.write(card_data[i])
+                    extractPng.write(text)
