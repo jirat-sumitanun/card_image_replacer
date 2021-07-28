@@ -22,12 +22,23 @@ namespace illusion_image_replacer
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            string savePath = Directory.GetCurrentDirectory();
+            if (errorHandler())
+            {
+                Console.WriteLine("save card");
+                string savePath = Directory.GetCurrentDirectory();
+            }
+
         }
 
         private void saveAsBtn_Click(object sender, EventArgs e)
         {
-
+            if (errorHandler())
+            {
+                this.saveFileDialog1.InitialDirectory = Path.GetDirectoryName(cardImagePath);
+                this.saveFileDialog1.FileName = this.filenameTextBox.Text;
+                this.saveFileDialog1.ShowDialog();
+                Console.WriteLine("save as Card");
+            }
         }
 
         private void cardImageBox_DragEnter(object sender, DragEventArgs e)
@@ -40,10 +51,18 @@ namespace illusion_image_replacer
             String[] droppedItem = (String[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var item in droppedItem)
             {
-                Console.WriteLine(item);
-                this.cardImageBox.Image = Image.FromFile(item);
-                this.cardImagePath = item;
-                this.filenameTextBox.Text = "new_" + Path.GetFileNameWithoutExtension(item);
+                if (Path.GetExtension(item) == ".png")
+                {
+                    Console.WriteLine(item);
+                    this.cardImageBox.Image = Image.FromFile(item);
+                    this.cardImagePath = item;
+                    this.filenameTextBox.Text = "new_" + Path.GetFileNameWithoutExtension(item);
+                }
+                else
+                {
+                    MessageBox.Show("only png", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
             }
         }
 
@@ -72,6 +91,22 @@ namespace illusion_image_replacer
         private void exportBtn_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private bool errorHandler()
+        {
+            if (this.cardImageBox.Image == null)
+            {
+                MessageBox.Show("import card", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (this.replaceImageBox.Image == null)
+            {
+                MessageBox.Show("import replace image", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+            
         }
     }
 }

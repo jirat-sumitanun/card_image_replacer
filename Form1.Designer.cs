@@ -40,6 +40,7 @@ namespace illusion_image_replacer
             this.label2 = new System.Windows.Forms.Label();
             this.clearBtn = new System.Windows.Forms.Button();
             this.exportBtn = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.cardImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.replaceImageBox)).BeginInit();
             this.SuspendLayout();
@@ -166,6 +167,14 @@ namespace illusion_image_replacer
             this.exportBtn.UseVisualStyleBackColor = true;
             this.exportBtn.Click += new System.EventHandler(this.exportBtn_Click);
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.CheckFileExists = true;
+            this.saveFileDialog1.DefaultExt = "png";
+            this.saveFileDialog1.Filter = "Image Files (*.png)|*.png";
+            this.saveFileDialog1.RestoreDirectory = true;
+            this.saveFileDialog1.Title = "Save New Card";
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -205,6 +214,7 @@ namespace illusion_image_replacer
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button clearBtn;
         private System.Windows.Forms.Button exportBtn;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 
