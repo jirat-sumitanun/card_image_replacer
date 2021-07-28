@@ -26,6 +26,7 @@ namespace illusion_image_replacer
             {
                 Console.WriteLine("save card");
                 string savePath = Directory.GetCurrentDirectory();
+                illusion_filter_class.saveNewCard(this.cardImagePath);
             }
 
         }
@@ -73,11 +74,18 @@ namespace illusion_image_replacer
 
         private void replaceImageBox_DragDrop(object sender, DragEventArgs e)
         {
+            string[] accept_ext = { ".png", ".jpg", ".jpeg", ".bmp", ".jiff" };
             String[] droppedItem = (String[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var item in droppedItem)
             {
-                this.replaceImageBox.Image = Image.FromFile(item);
-                this.replaceImagePath = item;
+                for (int i = 0; i < accept_ext.Length; i++)
+                {
+                    if(Path.GetExtension(item) == accept_ext[i]){
+                    this.replaceImageBox.Image = Image.FromFile(item);
+                    this.replaceImagePath = item;
+                }
+                }
+
             }
         }
 
