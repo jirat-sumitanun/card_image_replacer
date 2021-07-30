@@ -42,6 +42,7 @@ namespace illusion_image_replacer
             this.clearBtn = new System.Windows.Forms.Button();
             this.exportBtn = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.creditLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cardImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.replaceImageBox)).BeginInit();
             this.SuspendLayout();
@@ -122,9 +123,8 @@ namespace illusion_image_replacer
             this.statusLabel.ForeColor = System.Drawing.Color.LimeGreen;
             this.statusLabel.Location = new System.Drawing.Point(1186, 533);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(124, 32);
+            this.statusLabel.Size = new System.Drawing.Size(0, 32);
             this.statusLabel.TabIndex = 6;
-            this.statusLabel.Text = "Finished";
             // 
             // label1
             // 
@@ -175,12 +175,22 @@ namespace illusion_image_replacer
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.Title = "Save New Card";
             // 
+            // creditLabel
+            // 
+            this.creditLabel.AutoSize = true;
+            this.creditLabel.Location = new System.Drawing.Point(1203, 588);
+            this.creditLabel.Name = "creditLabel";
+            this.creditLabel.Size = new System.Drawing.Size(119, 17);
+            this.creditLabel.TabIndex = 11;
+            this.creditLabel.Text = "created by Jirat.S";
+            // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1322, 607);
+            this.Controls.Add(this.creditLabel);
             this.Controls.Add(this.exportBtn);
             this.Controls.Add(this.clearBtn);
             this.Controls.Add(this.label2);
@@ -216,6 +226,7 @@ namespace illusion_image_replacer
         private System.Windows.Forms.Button clearBtn;
         private System.Windows.Forms.Button exportBtn;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Label creditLabel;
     }
 }
 

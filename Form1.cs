@@ -24,10 +24,10 @@ namespace illusion_image_replacer
         {
             if (errorHandler())
             {
-                Console.WriteLine("start saving");
+                //Console.WriteLine("start saving");
                 string filename = this.filenameTextBox.Text.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ? this.filenameTextBox.Text : this.filenameTextBox.Text + ".png";
                 string savePath = Path.Combine(Path.GetDirectoryName(cardImagePath), filename);
-                illusion_utils_class.saveNewCard(this.cardImagePath,this.replaceImagePath, savePath);
+                startTask(this.cardImagePath, this.replaceImagePath, savePath);
             }
 
         }
@@ -42,8 +42,10 @@ namespace illusion_image_replacer
                 if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     //Console.WriteLine(this.saveFileDialog1.FileName);
-                    Console.WriteLine("save as Card");
-                    illusion_utils_class.saveNewCard(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
+                    //Console.WriteLine("save as Card");
+                    //illusion_utils_class.createNewCard(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
+                    startTask(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
+
                 }
                 
             }
@@ -59,15 +61,16 @@ namespace illusion_image_replacer
             String[] droppedItem = (String[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var item in droppedItem)
             {
-                if (Path.GetExtension(item) == ".png")
+                if (illusion_filter_class.illusion_filter(item) == "true")
                 {
+                    this.statusLabel.Text = "";
                     this.cardImageBox.Image = Image.FromFile(item);
                     this.cardImagePath = item;
                     this.filenameTextBox.Text = "new_" + Path.GetFileNameWithoutExtension(item);
                 }
                 else
                 {
-                    MessageBox.Show("only png", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(illusion_filter_class.illusion_filter(item), "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
             }
@@ -86,8 +89,10 @@ namespace illusion_image_replacer
             {
                 for (int i = 0; i < accept_ext.Length; i++)
                 {
-                    if(Path.GetExtension(item) == accept_ext[i]){
-                    this.replaceImageBox.Image = Image.FromFile(item);
+                    
+                    if (Path.GetExtension(item) == accept_ext[i]){
+                        this.statusLabel.Text = "";
+                        this.replaceImageBox.Image = Image.FromFile(item);
                     this.replaceImagePath = item;
                 }
                 }
@@ -100,6 +105,7 @@ namespace illusion_image_replacer
             this.cardImageBox.Image = null;
             this.replaceImageBox.Image = null;
             this.filenameTextBox.Text = "";
+            this.statusLabel.Text = "";
         }
 
         private void exportBtn_Click(object sender, EventArgs e)
@@ -126,8 +132,18 @@ namespace illusion_image_replacer
                 MessageBox.Show("import replace image", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+            if(this.filenameTextBox.Text == "")
+            {
+                MessageBox.Show("please fill filename", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
             return true;
             
+        }
+        private async void startTask(string cardImagePath,string replaceImagePath, string savePath)
+        {
+            await Task.Run(() => illusion_utils_class.createNewCard(cardImagePath, replaceImagePath, savePath));
+            this.statusLabel.Text = "Finished";
         }
     }
 }

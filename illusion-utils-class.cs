@@ -5,13 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace illusion_image_replacer
 {
     class illusion_utils_class
     {
+        public static void createNewCard(string cardImagePath, string replaceImagePath, string savePath)
+        {
+            string[] accept_ext = { ".png", ".jpg", ".jpeg", ".bmp", ".jiff" };
+            for (int i = 0; i < accept_ext.Length; i++)
+            {
+                if(Path.GetExtension(replaceImagePath) == accept_ext[i])
+                {
+                    if (accept_ext[i] != ".png")
+                    {
+                        string convert_image_path = convertToPNG(replaceImagePath);
+                        saveNewCard(cardImagePath, convert_image_path, savePath);
+                        File.Delete(convert_image_path);
+                    }
+                    else
+                    {
+                        saveNewCard(cardImagePath, replaceImagePath, savePath);
+                    }
+                }
+            }
+        }
         public static void saveNewCard(string cardImagePath, string replaceImagePath,string savePath)
         {
             byte[] bytesToSearch = Encoding.UTF8.GetBytes("IEND");
@@ -58,6 +76,15 @@ namespace illusion_image_replacer
                 Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "extract"));
             }
             return Path.Combine(Directory.GetCurrentDirectory(), "extract");
+        }
+
+        public static string convertToPNG(string filePath)
+        {
+            Image image = Image.FromFile(filePath);
+            string savePath = Path.Combine(Path.GetDirectoryName(filePath),$"{Path.GetFileNameWithoutExtension(filePath)}_temp.png");
+            //Console.WriteLine(savePath);
+            image.Save(savePath, System.Drawing.Imaging.ImageFormat.Png);
+            return savePath;
         }
 
         public static int search(byte[] haystack, byte[] needle)
