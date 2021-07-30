@@ -43,15 +43,19 @@ def extract_only_image(src,dest):
         s = f.read()
         text = b"IEND\xaeB`\x82"
         card_data = s.split(text)
+        with open('test.txt','w',encoding="utf8") as aaa:
+            aaa.write(str(card_data))
         if dest == None:
             if not os.path.isdir(os.path.join(os.getcwd(),"extract_png")):
                 os.mkdir(os.path.join(os.getcwd(),"extract_png"))
+            print('case1')
             with open ("extract_png/extract_%s%s"%(filename,ext), 'ab') as extractPng:
-                for i in range(0,2):
+                for i in range(0,1):
                     extractPng.write(card_data[i])
                     extractPng.write(text)
         else:
+            print("case2")
             with open (dest, 'ab') as extractPng:
-                for i in range(0,2):
+                for i in range(0,1):
                     extractPng.write(card_data[i])
                     extractPng.write(text)
