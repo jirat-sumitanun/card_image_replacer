@@ -169,9 +169,8 @@ namespace illusion_image_replacer
             // 
             // saveFileDialog1
             // 
-            this.saveFileDialog1.CheckFileExists = true;
             this.saveFileDialog1.DefaultExt = "png";
-            this.saveFileDialog1.Filter = "Image Files (*.png)|*.png";
+            this.saveFileDialog1.Filter = "PNG file |*.png";
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.Title = "Save New Card";
             // 

@@ -24,9 +24,10 @@ namespace illusion_image_replacer
         {
             if (errorHandler())
             {
-                Console.WriteLine("save card");
-                string savePath = Directory.GetCurrentDirectory();
-                illusion_filter_class.saveNewCard(this.cardImagePath);
+                Console.WriteLine("start saving");
+                string filename = this.filenameTextBox.Text.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ? this.filenameTextBox.Text : this.filenameTextBox.Text + ".png";
+                string savePath = Path.Combine(Path.GetDirectoryName(cardImagePath), filename);
+                illusion_filter_class.saveNewCard(this.cardImagePath,this.replaceImagePath, savePath);
             }
 
         }
@@ -37,8 +38,14 @@ namespace illusion_image_replacer
             {
                 this.saveFileDialog1.InitialDirectory = Path.GetDirectoryName(cardImagePath);
                 this.saveFileDialog1.FileName = this.filenameTextBox.Text;
-                this.saveFileDialog1.ShowDialog();
-                Console.WriteLine("save as Card");
+                
+                if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    //Console.WriteLine(this.saveFileDialog1.FileName);
+                    Console.WriteLine("save as Card");
+                    illusion_filter_class.saveNewCard(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
+                }
+                
             }
         }
 
@@ -54,7 +61,6 @@ namespace illusion_image_replacer
             {
                 if (Path.GetExtension(item) == ".png")
                 {
-                    Console.WriteLine(item);
                     this.cardImageBox.Image = Image.FromFile(item);
                     this.cardImagePath = item;
                     this.filenameTextBox.Text = "new_" + Path.GetFileNameWithoutExtension(item);
@@ -98,7 +104,14 @@ namespace illusion_image_replacer
 
         private void exportBtn_Click(object sender, EventArgs e)
         {
-
+            if(this.cardImageBox.Image == null)
+            {
+                MessageBox.Show("import card", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                illusion_filter_class.extractImage(this.cardImagePath);
+            }
         }
 
         private bool errorHandler()
