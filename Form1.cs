@@ -27,7 +27,7 @@ namespace illusion_image_replacer
                 Console.WriteLine("start saving");
                 string filename = this.filenameTextBox.Text.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ? this.filenameTextBox.Text : this.filenameTextBox.Text + ".png";
                 string savePath = Path.Combine(Path.GetDirectoryName(cardImagePath), filename);
-                illusion_filter_class.saveNewCard(this.cardImagePath,this.replaceImagePath, savePath);
+                illusion_utils_class.saveNewCard(this.cardImagePath,this.replaceImagePath, savePath);
             }
 
         }
@@ -43,7 +43,7 @@ namespace illusion_image_replacer
                 {
                     //Console.WriteLine(this.saveFileDialog1.FileName);
                     Console.WriteLine("save as Card");
-                    illusion_filter_class.saveNewCard(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
+                    illusion_utils_class.saveNewCard(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
                 }
                 
             }
@@ -110,7 +110,7 @@ namespace illusion_image_replacer
             }
             else
             {
-                illusion_filter_class.extractImage(this.cardImagePath);
+                illusion_utils_class.extractImage(this.cardImagePath);
             }
         }
 

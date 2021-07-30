@@ -29,6 +29,7 @@ namespace illusion_image_replacer
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.cardImageBox = new System.Windows.Forms.PictureBox();
             this.replaceImageBox = new System.Windows.Forms.PictureBox();
             this.filenameTextBox = new System.Windows.Forms.TextBox();
@@ -191,6 +192,7 @@ namespace illusion_image_replacer
             this.Controls.Add(this.filenameTextBox);
             this.Controls.Add(this.replaceImageBox);
             this.Controls.Add(this.cardImageBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Illusion Image Replacer";
             ((System.ComponentModel.ISupportInitialize)(this.cardImageBox)).EndInit();
