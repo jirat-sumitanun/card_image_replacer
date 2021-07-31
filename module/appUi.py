@@ -9,6 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os
+import sys
 
 
 class Ui_Form(object):
@@ -18,9 +20,6 @@ class Ui_Form(object):
         Form.setMinimumSize(QtCore.QSize(922, 520))
         Form.setMaximumSize(QtCore.QSize(922, 520))
         Form.setAcceptDrops(True)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("D:\\workingSpace\\python\\card_image_replacer\\icon01.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        Form.setWindowIcon(icon)
         self.filename = QtWidgets.QLineEdit(Form)
         self.filename.setGeometry(QtCore.QRect(650, 400, 221, 31))
         font = QtGui.QFont()
@@ -128,7 +127,7 @@ class Ui_Form(object):
 
 
 if __name__ == "__main__":
-    import sys
+
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form()

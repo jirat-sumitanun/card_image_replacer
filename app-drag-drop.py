@@ -15,6 +15,9 @@ class MyApp(QtWidgets.QMainWindow):
         # init main window
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.ui.icon = QtGui.QIcon()
+        self.ui.icon.addPixmap(QtGui.QPixmap(image_path), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(self.ui.icon)
         self.ui.card = custom_Image_Label(self)
         self.ui.replaceImage = custom_Image_Label2(self)
         self.ui.gridLayout.addWidget(self.ui.card,0,0)
@@ -134,6 +137,13 @@ class MyApp(QtWidgets.QMainWindow):
     #             QtWidgets.QMessageBox.warning(self, "Error", "This is not Coordinate Card")
     #         else:
     #             return True
+
+def resource_path(relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        base_path = getattr(sys, '_MEIPASS', osPath.dirname(osPath.abspath(__file__)))
+        return osPath.join(base_path, relative_path)
+image_path = resource_path("img/icon01.ico")
+
 
 def main():
     try:
