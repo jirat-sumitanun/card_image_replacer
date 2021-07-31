@@ -50,7 +50,7 @@ namespace illusion_image_replacer
                 return "coordinate";
             }
             // Koikatsu Sunshine check
-            else if (fileString.Contains("【KoiKatuCharaSun】"))
+            else if (fileString.Contains("【KoiKatuCharaSun】")) // Character card sunshine
             {
                 return "chara_sunshine";
             }
