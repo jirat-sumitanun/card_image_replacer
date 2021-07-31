@@ -117,8 +117,11 @@ class MyApp(QtWidgets.QMainWindow):
 
 
     def extract_image_event(self):
-        if self.errorHandler():
-            extract_only_image([self.card_path,self.replaceImage_path],None)
+        if self.card_path != "" or self.replaceImage_path != "":
+            image_list = [self.card_path,self.replaceImage_path]
+            for item in image_list:
+                if item != "":
+                    extract_only_image(item,None)
 
 def resource_path(relative_path):
         """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -126,8 +129,7 @@ def resource_path(relative_path):
         return os.path.join(base_path, relative_path)
 image_path = resource_path("img/icon01.ico")
 
-
-def main():
+if __name__== "__main__" :
     try:
         app = QtWidgets.QApplication(sys.argv)
         myapp = MyApp()
@@ -135,5 +137,3 @@ def main():
         sys.exit(app.exec_())
     except Exception as e:
         print(e)
-if __name__== "__main__" :
-    main()
