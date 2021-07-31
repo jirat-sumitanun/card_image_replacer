@@ -13,13 +13,14 @@ def create_new_card(original_card_path, replace_image_path, saved_new_card_path)
 def checkReplacedImageFileExt(replace_image_path, saved_new_card_path):
     if replace_image_path.endswith(('.jpg', '.jpeg', '.jiff')):
         convertJPGtoPNG(replace_image_path, saved_new_card_path)
-    #elif replace_image_path.endswith('.png'):
-    #    create_copied_card(replace_image_path, saved_new_card_path)
+    elif replace_image_path.endswith('.png'):
+        create_copied_card(replace_image_path, saved_new_card_path+"_temp.png")
 
 
 def convertJPGtoPNG(replaced_image_path, saved_new_card_path):
     v1 = Image.open(replaced_image_path)
     v1.save(saved_new_card_path+"_temp.png")
+    
 
 
 def create_copied_card(replaced_image_path, saved_new_card_path):
