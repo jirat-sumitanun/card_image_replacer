@@ -33,6 +33,7 @@ namespace illusion_image_replacer
         public static string illusion_card_check(string filePath)
         {
             var fileString = File.ReadAllText(filePath, Encoding.UTF8);
+            //File.WriteAllText("text.txt", fileString); // for filter debug
             // koikatsu check
             if (fileString.Contains("【KStudio】")) // Scene card
             {
@@ -50,7 +51,7 @@ namespace illusion_image_replacer
                 return "coordinate";
             }
             // Koikatsu Sunshine check
-            else if (fileString.Contains("【KoiKatuCharaSun】")) // Character card sunshine
+            else if (fileString.Contains("【KoiKatuCharaSun】")) // Character card sunshine
             {
                 return "chara_sunshine";
             }
