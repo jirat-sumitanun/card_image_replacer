@@ -50,7 +50,7 @@ namespace illusion_image_replacer
             // cardImageBox
             // 
             this.cardImageBox.AllowDrop = true;
-            this.cardImageBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.cardImageBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.cardImageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.cardImageBox.Location = new System.Drawing.Point(56, 56);
             this.cardImageBox.Name = "cardImageBox";
@@ -64,7 +64,7 @@ namespace illusion_image_replacer
             // replaceImageBox
             // 
             this.replaceImageBox.AllowDrop = true;
-            this.replaceImageBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.replaceImageBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.replaceImageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.replaceImageBox.Location = new System.Drawing.Point(730, 56);
             this.replaceImageBox.Name = "replaceImageBox";

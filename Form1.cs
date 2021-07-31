@@ -83,7 +83,7 @@ namespace illusion_image_replacer
 
         private void replaceImageBox_DragDrop(object sender, DragEventArgs e)
         {
-            string[] accept_ext = { ".png", ".jpg", ".jpeg", ".bmp", ".jiff" };
+            string[] accept_ext = { ".png", ".jpg", ".jpeg", ".jiff" };
             String[] droppedItem = (String[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var item in droppedItem)
             {

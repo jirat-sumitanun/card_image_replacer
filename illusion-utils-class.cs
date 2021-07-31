@@ -12,19 +12,22 @@ namespace illusion_image_replacer
     {
         public static void createNewCard(string cardImagePath, string replaceImagePath, string savePath)
         {
-            string[] accept_ext = { ".png", ".jpg", ".jpeg", ".bmp", ".jiff" };
+            string[] accept_ext = { ".png", ".jpg", ".jpeg", ".jiff" };
             for (int i = 0; i < accept_ext.Length; i++)
             {
                 if(Path.GetExtension(replaceImagePath) == accept_ext[i])
                 {
                     if (accept_ext[i] != ".png")
                     {
-                        string convert_image_path = convertToPNG(replaceImagePath);
-                        saveNewCard(cardImagePath, convert_image_path, savePath);
-                        File.Delete(convert_image_path);
+                        //string convert_image_path = convertToPNG(replaceImagePath);
+                        convertToPNG(replaceImagePath, savePath);
+                        //saveNewCard(cardImagePath, replaceImagePath, savePath);
+                        saveToConvert(cardImagePath, savePath);
+                        //File.Delete(convert_image_path);
                     }
                     else
                     {
+                        //File.Copy(replaceImagePath, savePath);
                         saveNewCard(cardImagePath, replaceImagePath, savePath);
                     }
                 }
@@ -35,13 +38,22 @@ namespace illusion_image_replacer
             byte[] bytesToSearch = Encoding.UTF8.GetBytes("IEND");
             byte[] cardImage = File.ReadAllBytes(cardImagePath);
             byte[] replaceImage = File.ReadAllBytes(replaceImagePath);
+            //Console.WriteLine($"byteToSearch {bytesToSearch.Length}\ncardImage {cardImage.Length}\nreplaceImage {replaceImage.Length}");
             int indexCardImage = search(cardImage, bytesToSearch);
-            int indexReplaceImage = search(replaceImage, bytesToSearch);
-            int newCardArraySize = (cardImage.Length - (indexCardImage + 8)) + (indexReplaceImage+8);
+            byte[] card_data = new byte[cardImage.Length - (indexCardImage+8)];
+            System.Buffer.BlockCopy(cardImage, indexCardImage + 8, card_data, 0, cardImage.Length - (indexCardImage + 8));
+            //writeNewCard(card_data, savePath);
+            
+            //int indexReplaceImage = search(replaceImage, bytesToSearch);
+
+            //int newCardArraySize = (cardImage.Length - (indexCardImage + 8)) + (indexReplaceImage+8);
+            int newCardArraySize = card_data.Length + replaceImage.Length;
             byte[] newCard = new byte[newCardArraySize];
-            System.Buffer.BlockCopy(replaceImage,0,newCard,0,indexReplaceImage+8);
-            System.Buffer.BlockCopy(cardImage, indexCardImage + 8, newCard, indexReplaceImage + 8,cardImage.Length - (indexCardImage +8));
+            System.Buffer.BlockCopy(replaceImage,0,newCard,0,replaceImage.Length);
+            //System.Buffer.BlockCopy(cardImage, indexCardImage + 8, newCard, indexReplaceImage + 8,cardImage.Length - (indexCardImage +8));
+            System.Buffer.BlockCopy(card_data, 0, newCard, replaceImage.Length, card_data.Length);
             writeNewCard(newCard,savePath);
+
         }
 
         public static void writeNewCard(byte[] byteToWrite, string savePath) {
@@ -58,6 +70,22 @@ namespace illusion_image_replacer
             //Write to new file
             File.WriteAllBytes(savePath, byteToWrite);
         }
+        public static void saveToConvert(string cardImagePath, string savePath)
+        {
+            byte[] bytesToSearch = Encoding.UTF8.GetBytes("IEND");
+            byte[] cardImage = File.ReadAllBytes(cardImagePath);
+            byte[] replaceImage = File.ReadAllBytes(savePath);
+            int indexCardImage = search(cardImage, bytesToSearch);
+            byte[] card_data = new byte[cardImage.Length - (indexCardImage + 8)];
+            System.Buffer.BlockCopy(cardImage, indexCardImage + 8, card_data, 0, cardImage.Length - (indexCardImage + 8));
+            int newCardArraySize = card_data.Length + replaceImage.Length;
+            byte[] newCard = new byte[newCardArraySize];
+            System.Buffer.BlockCopy(replaceImage, 0, newCard, 0, replaceImage.Length);
+            System.Buffer.BlockCopy(card_data, 0, newCard, replaceImage.Length, card_data.Length);
+            File.Delete(savePath);
+            writeNewCard(newCard, savePath);
+            
+        }
         public static void extractImage(string filePath)
         {
             byte[] bytesArray = File.ReadAllBytes(filePath);
@@ -65,7 +93,8 @@ namespace illusion_image_replacer
             int idx = search(bytesArray, bytes);
             byte[] pngImageSection = new byte[idx + 8];
             System.Buffer.BlockCopy(bytesArray, 0, pngImageSection, 0, idx + 8);
-            string path_to_save = Path.Combine(createExtractFolder(), "extract_" + Path.GetFileName(filePath));
+            string date_extract = DateTime.Now.ToString("yyyyMMddHHmmssfffffff");
+            string path_to_save = Path.Combine(createExtractFolder(), "extract_" + date_extract + ".png");
             File.WriteAllBytes(path_to_save, pngImageSection);
         }
 
@@ -78,13 +107,14 @@ namespace illusion_image_replacer
             return Path.Combine(Directory.GetCurrentDirectory(), "extract");
         }
 
-        public static string convertToPNG(string filePath)
+        public static void convertToPNG(string replace_image, string savePath)
         {
-            Image image = Image.FromFile(filePath);
-            string savePath = Path.Combine(Path.GetDirectoryName(filePath),$"{Path.GetFileNameWithoutExtension(filePath)}_temp.png");
+            Image image = Image.FromFile(replace_image);
+            //string savePath = Path.Combine(Path.GetDirectoryName(replace_image),$"{Path.GetFileNameWithoutExtension(replace_image)}_temp.png");
             //Console.WriteLine(savePath);
             image.Save(savePath, System.Drawing.Imaging.ImageFormat.Png);
-            return savePath;
+            //return savePath;
+            
         }
 
         public static int search(byte[] haystack, byte[] needle)
@@ -98,7 +128,6 @@ namespace illusion_image_replacer
             }
             return -1;
         }
-
         public static bool match(byte[] haystack, byte[] needle, int start)
         {
             if (needle.Length + start > haystack.Length)
