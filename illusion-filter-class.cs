@@ -49,6 +49,11 @@ namespace illusion_image_replacer
             {
                 return "coordinate";
             }
+            // Koikatsu Sunshine check
+            else if (fileString.Contains("【KoiKatuCharaSun】"))
+            {
+                return "chara_sunshine";
+            }
             // AI-Girls & Honey Select2 check
             else if (fileString.Contains("【StudioNEOV2】")) // Scene card
             {
