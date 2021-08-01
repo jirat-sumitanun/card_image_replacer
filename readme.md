@@ -26,6 +26,8 @@ or You need to load it with game or studio menu.
 
 So I suggest you to Convert it into PNG with software like Format Factory. (I tested, it work).
 
+in case you want to drag and drop it.
+
 issue maybe come from convert image code that can't be fix.
 
 ## Preview

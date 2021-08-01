@@ -24,7 +24,6 @@ namespace illusion_image_replacer
         {
             if (errorHandler())
             {
-                //Console.WriteLine("start saving");
                 string filename = this.filenameTextBox.Text.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ? this.filenameTextBox.Text : this.filenameTextBox.Text + ".png";
                 string savePath = Path.Combine(Path.GetDirectoryName(cardImagePath), filename);
                 startTask(this.cardImagePath, this.replaceImagePath, savePath);
@@ -41,9 +40,6 @@ namespace illusion_image_replacer
                 
                 if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    //Console.WriteLine(this.saveFileDialog1.FileName);
-                    //Console.WriteLine("save as Card");
-                    //illusion_utils_class.createNewCard(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
                     startTask(cardImagePath, replaceImagePath, this.saveFileDialog1.FileName);
 
                 }
