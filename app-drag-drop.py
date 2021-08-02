@@ -6,7 +6,6 @@ from module.utils import create_new_card, extract_only_image, remove_to_overwrit
 from module.appUi import Ui_Form
 #from module.main import Ui_Form
 from module.custom_label import custom_Image_Label, custom_Image_Label2
-from module.custom_dialog import custom_dialog
 from module.illusion_filter_module import card_filter
 
 
