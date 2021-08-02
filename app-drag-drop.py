@@ -2,10 +2,11 @@
 import sys, os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal, pyqtSlot
-from module.utils import create_new_card, extract_only_image
+from module.utils import create_new_card, extract_only_image, remove_to_overwrite, generate_duplicate_filename
 from module.appUi import Ui_Form
 #from module.main import Ui_Form
 from module.custom_label import custom_Image_Label, custom_Image_Label2
+from module.custom_dialog import custom_dialog
 from module.illusion_filter_module import card_filter
 
 
@@ -22,6 +23,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.replaceImage_box = custom_Image_Label2(self)
         self.ui.gridLayout.addWidget(self.ui.card_box,0,0)
         self.ui.gridLayout.addWidget(self.ui.replaceImage_box,0,1)
+
+        #self.ui.custom_dialog = custom_dialog(self)
         # init default data
         self.card_path = ""
         self.savePath = ''
@@ -75,8 +78,17 @@ class MyApp(QtWidgets.QMainWindow):
             self.saveFilename = f"{self.ui.filename.text()}.png"
             save_dir = os.path.dirname(self.card_path)
             self.savePath = os.path.join(save_dir,self.saveFilename).replace('\\','/')
-            self.saveNewCard()
-            self.save_success_message()
+            if(os.path.isfile(self.savePath)):
+                res = self.show_dialog()
+                if res == 0: # overwrite
+                    remove_to_overwrite(self.savePath)
+                elif res == 1: # duplicate
+                    self.savePath = generate_duplicate_filename(self.savePath)
+                self.saveNewCard()
+                self.save_success_message()
+            else:
+                self.saveNewCard()
+                self.save_success_message()
 
     def save_file_as(self):
         if self.errorHandler():
@@ -122,6 +134,16 @@ class MyApp(QtWidgets.QMainWindow):
             for item in image_list:
                 if item != "":
                     extract_only_image(item,None)
+
+    def show_dialog(self):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setWindowTitle("File already existed")
+        msgBox.setText('file existed, would you like to?')
+        msgBox.addButton(QtWidgets.QPushButton("Overwrite"),QtWidgets.QMessageBox.AcceptRole)
+        msgBox.addButton(QtWidgets.QPushButton("keep both"),QtWidgets.QMessageBox.AcceptRole)
+        msgBox.addButton(QtWidgets.QPushButton("cancel"),QtWidgets.QMessageBox.RejectRole)
+        res = msgBox.exec_()
+        return res
 
 def resource_path(relative_path):
         """ Get absolute path to resource, works for dev and for PyInstaller """

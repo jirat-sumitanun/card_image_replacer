@@ -69,6 +69,18 @@ def extract_only_image(src,dest):
                     extract_image.write(image_data_end_index[i])
                 extract_image.write(byte_to_find)
 
+def remove_to_overwrite(filePath):
+    os.remove(filePath)
+
+def generate_duplicate_filename(filePath):
+    i = 1
+    temp = filePath.split("/")
+    filename = os.path.splitext(temp.pop())[0]
+    while(os.path.isfile(filePath)):
+        filePath = os.path.join(os.path.split(filePath)[0],f"{filename} ({i}).png")
+        i+=1
+    return filePath
+
 # def copyCardData2(card_path,replace_path,save_path):
 #     arr = []
 #     arr2 = []
