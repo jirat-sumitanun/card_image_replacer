@@ -16,7 +16,7 @@ namespace illusion_image_replacer
             {
                 if (illusion_card_check(filePath) == "other")
                 {
-                    return "this image not relate to illusion game";
+                    return "this image not related to illusion game";
                 }
                 else return "true";
             }

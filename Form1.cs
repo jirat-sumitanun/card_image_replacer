@@ -24,9 +24,28 @@ namespace illusion_image_replacer
         {
             if (errorHandler())
             {
+                this.statusLabel.Text = "";
                 string filename = this.filenameTextBox.Text.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ? this.filenameTextBox.Text : this.filenameTextBox.Text + ".png";
                 string savePath = Path.Combine(Path.GetDirectoryName(cardImagePath), filename);
-                startTask(this.cardImagePath, this.replaceImagePath, savePath);
+                if (File.Exists(savePath))
+                {
+                    customDialog d = new customDialog();
+                    d.ShowDialog();
+                    if (d.userChoice == "overWrite")
+                    {
+                        File.Delete(savePath);
+                        startTask(this.cardImagePath, this.replaceImagePath, savePath);
+                    }
+                    else if (d.userChoice == "duplicate")
+                    {
+                        savePath = illusion_utils_class.createNewFilename(savePath);
+                        startTask(this.cardImagePath, this.replaceImagePath, savePath);
+                    }
+                }
+                else
+                {
+                    startTask(this.cardImagePath, this.replaceImagePath, savePath);
+                }
             }
 
         }
@@ -35,6 +54,7 @@ namespace illusion_image_replacer
         {
             if (errorHandler())
             {
+                this.statusLabel.Text = "";
                 this.saveFileDialog1.InitialDirectory = Path.GetDirectoryName(cardImagePath);
                 this.saveFileDialog1.FileName = this.filenameTextBox.Text;
                 
@@ -89,7 +109,7 @@ namespace illusion_image_replacer
                     if (Path.GetExtension(item) == accept_ext[i]){
                         this.statusLabel.Text = "";
                         this.replaceImageBox.Image = Image.FromFile(item);
-                    this.replaceImagePath = item;
+                        this.replaceImagePath = item;
                 }
                 }
 
@@ -113,6 +133,7 @@ namespace illusion_image_replacer
             else
             {
                 illusion_utils_class.extractImage(this.cardImagePath);
+                this.statusLabel.Text = "Exported";
             }
         }
 
@@ -140,6 +161,40 @@ namespace illusion_image_replacer
         {
             await Task.Run(() => illusion_utils_class.createNewCard(cardImagePath, replaceImagePath, savePath));
             this.statusLabel.Text = "Finished";
+        }
+
+        private void selectCardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //this.openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+            this.openFileDialog1.ShowDialog();
+            if(illusion_filter_class.illusion_filter(this.openFileDialog1.FileName) == "true")
+            {
+                this.statusLabel.Text = "";
+                if (this.openFileDialog1.FileName != "")
+                {
+                    this.cardImageBox.Image = Image.FromFile(this.openFileDialog1.FileName);
+                    this.filenameTextBox.Text = "new_" + Path.GetFileNameWithoutExtension(this.openFileDialog1.FileName);
+                    this.cardImagePath = this.openFileDialog1.FileName;
+                }
+            }
+            else
+            {
+                MessageBox.Show(illusion_filter_class.illusion_filter(this.openFileDialog1.FileName), "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void selectReplaceImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.statusLabel.Text = "";
+            this.openFileDialog1.Filter = "Image file (*.png, *.jpg, *.jpeg, *.jiff)| *.png;*.jpg;*.jepg;*.jiff";
+            this.openFileDialog1.ShowDialog();
+            if (this.openFileDialog1.FileName != "")
+            {
+                this.replaceImageBox.Image = Image.FromFile(this.openFileDialog1.FileName);
+                this.replaceImagePath = this.openFileDialog1.FileName;
+            }
+
         }
     }
 }

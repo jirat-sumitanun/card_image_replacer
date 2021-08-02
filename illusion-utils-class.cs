@@ -119,6 +119,18 @@ namespace illusion_image_replacer
             image.Save(savePath, System.Drawing.Imaging.ImageFormat.Png);
         }
 
+        public static string createNewFilename(string filePath)
+        {
+            string filename = Path.GetFileNameWithoutExtension(filePath);
+            int i = 1;
+            while (File.Exists(filePath))
+            {
+                filePath = Path.Combine(Path.GetDirectoryName(filePath),$"{filename} ({i}).png");
+                i++;
+            }
+            return filePath;
+        }
+
         public static int search(byte[] haystack, byte[] needle)
         {
             for (int i = 0; i <= haystack.Length - needle.Length; i++)
